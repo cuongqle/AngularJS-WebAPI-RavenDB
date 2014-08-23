@@ -1,0 +1,99 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/*ng-grid*/
+.ngGrid {
+    border: 1px solid rgb(212,212,212);
+    height: 420px;
+    width: 550px;
+}
+
+.ngGrid .ngCellText,
+.ngGrid .ngFooterPanel {
+    display: inline-block;
+    font-size: 11px;
+}
+
+.ngGrid .ngHeaderCell {
+    text-align: center;
+}
+
+.ngGrid .ngTopPanel {
+    background-color: #697E8A;
+    color: #fff;
+    font-size: 12px;
+}
+
+.ngGrid .ngRow .numeric-cell,
+.ngGrid .ngFooterPanel .numeric-cell {
+    text-align: right;
+}
+
+.ngGrid .ngFooterPanel {
+    display: table-cell;
+    font-weight: bold;
+    height: 30px;
+    vertical-align: middle;
+}
+
+.ngGrid .ngHeaderContainer .ngHeaderCell .ngSortButtonUp,
+.ngGrid .ngHeaderContainer .ngHeaderCell .ngSortButtonDown {
+    border-color: white transparent;
+}
+
+.ngGrid .grid-action-cell >a {
+    padding-left: 12px;
+    font-weight: bold;
+}
+
+.horizontal-display > div {
+    display: inline-block;
+}
+
+.lbl-field {
+    width: 180px;
+}
+
+.input-field {
+    width: 200px;
+}

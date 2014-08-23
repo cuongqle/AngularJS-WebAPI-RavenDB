@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        var appBaseUrl = '@(Url.Content("~/"))';
+        window.baseUrl = appBaseUrl;
+    </script>
+    <!--ANGULARJS-->
+    <script src="~/Scripts/angular/angular.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/angular/angular-route.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/angular/angular-resource.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/angular/ng-grid.js" type="text/javascript"></script>
+    <script src="~/Scripts/angular/ui-bootstrap-0.11.0.min.js" type="text/javascript"></script>
+    <!--END ANGULARJS-->
+    <!--UNDERSCORE-->
+    <script src="~/Scripts/underscore/underscore.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/underscore/underscore.string.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/underscore/underscore.string.format.js" type="text/javascript"></script>
+    <!--END UNDERSCORE-->
+    <!--REQUIRE-->
+    <script src="~/Scripts/requirejs/requirejs.min.js" type="text/javascript" data-main="Application/main"></script>
+    <!--END REQUIRE-->
+</body>
+</html>
