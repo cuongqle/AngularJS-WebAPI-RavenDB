@@ -1,15 +1,10 @@
-﻿using SinglePageSample.Db;
-using SinglePageSample.Db.DbStore;
+﻿using SinglePageSample.Db.DbStore;
+using SinglePageSample.Repository.Expressions;
 using SinglePageSample.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Raven.Client.Linq;
 using System.Linq.Expressions;
-using Raven.Client;
-using SinglePageSample.Repository.Expressions;
 
 namespace SinglePageSample.Repository
 {
@@ -50,9 +45,9 @@ namespace SinglePageSample.Repository
             return DbStore.QuickCount<T>();
         }
 
-        private IEnumerable<T> SearchByWildCard<T>(string indexName, string searchTerms, Expression<Func<T, object>> fieldSelector)
+        private IEnumerable<TEntity> SearchByWildCard<TEntity>(string indexName, string searchTerms, Expression<Func<TEntity, object>> fieldSelector)
         {
-            return DbStore.Search<T>(indexName, fieldSelector, searchTerms, EscapeQueryOptions.AllowAllWildcards);
+            return DbStore.Search<TEntity>(indexName, fieldSelector, searchTerms);
         }
 
         protected IEnumerable<T> SingleSearch(string indexName, string searchTerms, IExpression<T> exp)

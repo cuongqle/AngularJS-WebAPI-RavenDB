@@ -1,18 +1,17 @@
-﻿using SinglePageSample.Repository.Entities;
+﻿using Microsoft.AspNetCore.Mvc;
+using SinglePageSample.Repository.Entities;
 using SinglePageSample.Repository.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Web.Http;
 
 namespace SinglePageSample.WebAPI.Controllers
 {
-    public class EmployeeController : ApiController
+    [ApiController]
+    [Route("api/[controller]/[action]")]
+    public class EmployeeController : ControllerBase
     {
-        private IEmployeeRepository EmployeeRepository;
-        private ICompanyRepository CompanyRepository;
+        private readonly IEmployeeRepository EmployeeRepository;
+        private readonly ICompanyRepository CompanyRepository;
 
         public EmployeeController(IEmployeeRepository employeeRepository, ICompanyRepository companyRepository)
         {
@@ -20,24 +19,25 @@ namespace SinglePageSample.WebAPI.Controllers
             this.CompanyRepository = companyRepository;
         }
 
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public int GetTotalEmployees(string name, int? companyId = null)
         {
             return this.EmployeeRepository.TotalEmployeeCriteriaByName(name, companyId);
         }
 
-        [AcceptVerbs("GET")]
+        [HttpGet]
         public IEnumerable<Employee> GetPagingSearchEmployees(int currentPage, string name, int? companyId = null)
         {
             return this.EmployeeRepository.PagingEmployeesCriteriaByName(currentPage, name, companyId);
         }
 
-        public HttpResponseMessage PostEmployee(Employee employee)
+        [HttpPost]
+        public IActionResult PostEmployee([FromBody] Employee employee)
         {
             var company = this.CompanyRepository.GetById(employee.CompanyId);
             if (company == null)
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             // update company name
@@ -46,10 +46,10 @@ namespace SinglePageSample.WebAPI.Controllers
             this.EmployeeRepository.Insert(employee);
             if (employee.Id > 0)
             {
-                return new HttpResponseMessage(HttpStatusCode.OK);
+                return Ok();
             }
 
-            return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 }

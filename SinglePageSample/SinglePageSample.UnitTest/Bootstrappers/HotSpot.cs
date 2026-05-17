@@ -1,39 +1,45 @@
-﻿using Microsoft.Practices.Unity;
-using Raven.Client;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Indexes;
 using SinglePageSample.Db.DbStore;
 using SinglePageSample.Db.RavenStore;
 using SinglePageSample.Repository;
-using SinglePageSample.Repository.Entities;
 using SinglePageSample.Repository.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SinglePageSample.UnitTest.Bootstrappers
 {
     public static class HotSpot
     {
-        public static UnityContainer UnityContainer { get; set; }
+        private static ServiceProvider ServiceProvider { get; set; }
 
         public static void WireUp()
         {
-            UnityContainer = new UnityContainer();
+            if (ServiceProvider != null)
+            {
+                return;
+            }
 
-            UnityContainer.RegisterType<IDocumentProvider<IDocumentStore>, RavenDocumentProvider>(
-                new TransientLifetimeManager());
-            UnityContainer.RegisterType<IDbStore, RavenDbStore>((
-                new TransientLifetimeManager()),
-                new InjectionConstructor(new ResolvedParameter<IDocumentProvider<IDocumentStore>>(), "Default"));
+            var services = new ServiceCollection();
+            var store = new DocumentStore
+            {
+                Urls = new[] { "http://localhost:8080" },
+                Database = "Sample"
+            }.Initialize();
 
-            UnityContainer.RegisterType<ICompanyRepository, CompanyRepository>(new TransientLifetimeManager());
-            UnityContainer.RegisterType<IEmployeeRepository, EmployeeRepository>(new TransientLifetimeManager());
+            IndexCreation.CreateIndexes(typeof(CompanyRepository).Assembly, store);
+
+            services.AddSingleton<IDocumentStore>(store);
+            services.AddScoped<IDbStore, RavenDbStore>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            ServiceProvider = services.BuildServiceProvider();
         }
 
         public static T Resolve<T>()
         {
-            return UnityContainer.Resolve<T>();
+            using var scope = ServiceProvider.CreateScope();
+            return scope.ServiceProvider.GetRequiredService<T>();
         }
     }
 }

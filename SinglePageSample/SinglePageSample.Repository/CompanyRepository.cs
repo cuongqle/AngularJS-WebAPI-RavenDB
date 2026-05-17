@@ -2,13 +2,8 @@
 using SinglePageSample.Repository.Entities;
 using SinglePageSample.Repository.Indexes;
 using SinglePageSample.Repository.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Raven.Client.Linq;
-using Raven.Client;
 
 namespace SinglePageSample.Repository
 {

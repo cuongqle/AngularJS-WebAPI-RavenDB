@@ -1,43 +1,44 @@
-﻿using SinglePageSample.Db.DbStore;
+﻿using Raven.Client.Documents;
+using Raven.Client.Documents.Linq;
+using Raven.Client.Documents.Session;
+using SinglePageSample.Db.DbStore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Raven.Client;
-using Raven.Client.Indexes;
 using System.Globalization;
-using System.Data.Entity.Design.PluralizationServices;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace SinglePageSample.Db.RavenStore
 {
-    public class RavenDbStore: IDbStore
+    public class RavenDbStore : IDbStore
     {
-        protected IDocumentStore DocumentStore { get; set; }
-        protected IDocumentProvider<IDocumentStore> DocumentProvider { get; set; }
+        protected IDocumentStore DocumentStore { get; }
 
         private string GetFullRavenEntityId<T>(string id)
         {
             string entityName = typeof(T).Name;
-            var pluralService = PluralizationService.CreateService(System.Globalization.CultureInfo.CurrentCulture);
-            if (pluralService.IsPlural(entityName) == false)
-            {
-                entityName = pluralService.Pluralize(entityName);
-            }
+            entityName = Pluralize(entityName);
 
             return string.Format(CultureInfo.InvariantCulture, "{0}/{1}", entityName.ToLowerInvariant(), id);
         }
 
-        public RavenDbStore(IDocumentProvider<IDocumentStore> documentProvider)
+        private static string Pluralize(string entityName)
         {
-            this.DocumentProvider = documentProvider;
+            if (entityName.EndsWith("y", StringComparison.OrdinalIgnoreCase))
+            {
+                return entityName[..^1] + "ies";
+            }
+
+            if (entityName.EndsWith("s", StringComparison.OrdinalIgnoreCase))
+            {
+                return entityName;
+            }
+
+            return entityName + "s";
         }
 
-        public RavenDbStore(IDocumentProvider<IDocumentStore> documentProvider, string connectionName) :
-            this(documentProvider)
+        public RavenDbStore(IDocumentStore documentStore)
         {
-            this.DocumentStore = this.DocumentProvider.CreateInstance(connectionName);
+            DocumentStore = documentStore ?? throw new ArgumentNullException(nameof(documentStore));
         }
 
         public T Load<T>(string id)
@@ -60,16 +61,15 @@ namespace SinglePageSample.Db.RavenStore
         {
             using (var session = this.DocumentStore.OpenSession())
             {
-                return session.Query<T>(indexName);
+                return session.Query<T>(indexName).ToList().AsQueryable();
             }
         }
 
-        public IQueryable<T> Search<T>(string indexName, Expression<Func<T, object>> fieldSelector, 
-            string searchTerms, EscapeQueryOptions options)
+        public IQueryable<T> Search<T>(string indexName, Expression<Func<T, object>> fieldSelector, string searchTerms)
         {
             using (var session = this.DocumentStore.OpenSession())
             {
-                return session.Query<T>(indexName).Search<T>(fieldSelector, searchTerms, escapeQueryOptions: options);
+                return session.Query<T>(indexName).Search(fieldSelector, searchTerms).ToList().AsQueryable();
             }
         }
 
@@ -79,7 +79,6 @@ namespace SinglePageSample.Db.RavenStore
             {
                 using (var session = this.DocumentStore.OpenSession())
                 {
-                    session.Advanced.UseOptimisticConcurrency = false;
                     session.Store(entity);
                     session.SaveChanges();
                 }
@@ -96,7 +95,6 @@ namespace SinglePageSample.Db.RavenStore
             {
                 using (var session = this.DocumentStore.OpenSession())
                 {
-                    session.Advanced.UseOptimisticConcurrency = false;
                     session.Store(entity, id);
                     session.SaveChanges();
                 }
@@ -118,7 +116,6 @@ namespace SinglePageSample.Db.RavenStore
             {
                 using (var session = this.DocumentStore.OpenSession())
                 {
-                    session.Advanced.UseOptimisticConcurrency = false;
                     session.Delete(entity);
                     session.SaveChanges();
                 }
@@ -133,9 +130,9 @@ namespace SinglePageSample.Db.RavenStore
         {
             using (var session = this.DocumentStore.OpenSession())
             {
-                RavenQueryStatistics statistics;
+                QueryStatistics statistics;
                 session.Query<T>().Statistics(out statistics).Take(0).ToArray();
-                return statistics.TotalResults;
+                return (int)statistics.TotalResults;
             }
         }
 

@@ -49,7 +49,7 @@ namespace SinglePageSample.UnitTest.RepositoryTest
         {
             var companyRepository = HotSpot.Resolve<ICompanyRepository>();
             var total = companyRepository.Count();
-            Assert.AreEqual(total, 200);
+            Assert.AreEqual(200, total);
         }
     }
 }
