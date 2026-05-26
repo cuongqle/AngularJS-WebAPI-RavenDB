@@ -1,0 +1,84 @@
+## OS
+.DS_Store
+Thumbs.db
+
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]uild/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+## Visual Studio / Rider / VS Code
+.vs/
+.idea/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## .NET
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.nuget.props
+*.nuget.targets
+*.cache
+*.dll.config
+*.exe.config
+
+## NuGet (legacy packages folder + restore output)
+**/packages/*
+!**/packages/build/
+*.nupkg
+*.snupkg
+.nuget/NuGet.exe
+
+## Test
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+
+## ASP.NET
+*.pubxml
+*.publishproj
+PublishScripts/
+App_Data/*.mdf
+App_Data/*.ldf
+
+## RavenDB / local data
+**/Data/
+**/RavenData/
+
+## Misc
+*.log
+*.tmp
+*.temp
+*~
+*.swp
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.ncrunch*
+_NCrunch_*

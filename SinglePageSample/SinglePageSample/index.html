@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Single Page Sample</title>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href="Content/ng-grid/ng-grid.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container body-content">
+        <div ng-view></div>
+    </div>
+
+    <script>
+        window.baseUrl = '/';
+        window.apiBaseUrl = 'http://localhost:5000/';
+    </script>
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/angular/angular.min.js"></script>
+    <script src="Scripts/angular/angular-route.min.js"></script>
+    <script src="Scripts/angular/angular-resource.min.js"></script>
+    <script src="Scripts/angular/ng-grid.js"></script>
+    <script src="Scripts/underscore/underscore.string.format.js"></script>
+    <script src="Scripts/requirejs/requirejs.min.js" data-main="Application/main"></script>
+</body>
+</html>
